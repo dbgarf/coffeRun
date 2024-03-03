@@ -127,6 +127,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+coffeerun-env/
 
 # Spyder project settings
 .spyderproject
