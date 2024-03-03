@@ -47,7 +47,7 @@ class GroupOrder(models.Model):
         for item in order_items:
             user = item.ordered_by
             if user == payer:
-                user.net_credit = user.net_credit - self.total_price
+                user.net_credit = user.net_credit - self.total_price + item.price
                 user.last_payment_date = self.order_date
             else:
                 user.net_credit = user.net_credit + item.price
