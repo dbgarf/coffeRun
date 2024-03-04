@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CoffeeRun - Create Group Order</title>
-<style>
-    /* Add your CSS styling here */
-</style>
+<title>CoffeeRun - Index</title>
 </head>
 <body>
 
+<h3>CoffeeRun Index</h3>
 
 <div>
-    <a href="{% url 'user_list' %}">Users List</a>
-    <a href="{% url 'user_create' %}">Create New User</a>
-    <a href="{% url 'group_order_list' %}">Group Orders List</a>
-    <a href="{% url 'group_order_create' %}">Create New Group Order</a>
+    <ul>
+        <li><p><a href="{% url 'user_list' %}">Users List</a></p></li>
+        <li><p><a href="{% url 'user_create' %}">Create New User</a></p></li>
+        <li><p><a href="{% url 'group_order_list' %}">Group Orders List</a></p></li>
+        <li><p><a href="{% url 'group_order_create' %}">Create New Group Order</a></p></li>
+    </ul>
 </div>
 
 </body>

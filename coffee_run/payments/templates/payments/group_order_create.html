@@ -4,16 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CoffeeRun - Create Group Order</title>
-<style>
-    /* Add your CSS styling here */
-</style>
 </head>
 <body>
     <h1>Create New Group Order</h1>
 
     {% csrf_token %}
     <script>
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     </script>
 
     <form id="createGroupOrderForm">
@@ -32,9 +29,11 @@
         <button type="button" onclick="submitForm()">Create Group Order</button>
     </form>
 
+    <div id="form-errors"></div>
+
     <div>
-        <a href="{% url 'index' %}">Back to Index</a>
-        <a href="{% url 'group_order_list' %}">Group Orders List</a>
+        <span><a href="{% url 'index' %}">Back to Index</a></span>
+        <span><a href="{% url 'group_order_list' %}">Group Orders List</a></span>
     </div>
 
     {{ users|json_script:"users-data" }}
@@ -138,6 +137,7 @@
                 payload.push(orderItem);
             }
             console.log(payload);
+
             fetch('/group_orders/create/', {
                 method: 'PUT',
                 headers: {
@@ -150,14 +150,20 @@
                 if (response.ok) {
                     return response.text();
                 } else {
-                    console.error('Error creating group order.');
+                    return response.text().then(errorMsg => {
+                        throw new Error(errorMsg);
+                    });
                 }
             })
             .then(url => {
                 window.location.href = url;
             })
             .catch(error => {
-                console.error('Error:', error);
+                const errorContainer = document.getElementById('form-errors');
+                errorContainer.innerHTML = '';
+                const errorDisplay = document.createElement('p');
+                errorDisplay.textContent = error.message;
+                errorContainer.appendChild(errorDisplay);
             });
         }
     </script>

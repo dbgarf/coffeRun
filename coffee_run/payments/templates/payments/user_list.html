@@ -3,14 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CoffeeRun - Create Group Order</title>
-<style>
-    /* Add your CSS styling here */
-</style>
+<title>CoffeeRun - User List</title>
 </head>
 <body>
 
-
+<h3>CoffeeRun Users</h3>
 
 <ul>
     {% for user in users %}
@@ -21,7 +18,8 @@
 </ul>
 
 <div>
-    <a href="{% url 'index' %}">Back to Index</a>
+    <span><a href="{% url 'index' %}">Back to Index</a></span>
+    <span><a href="{% url 'user_create' %}">Create New User</a></span>
 </div>
 
 </body>
