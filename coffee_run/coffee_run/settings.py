@@ -76,8 +76,12 @@ WSGI_APPLICATION = 'coffee_run.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        "NAME": 'coffee_run_db',
+        "USER": 'coffee_run',
+        "PASSWORD": 'caffeine',
+        "HOST": 'db',
+        "PORT": 5432,
     }
 }
 
