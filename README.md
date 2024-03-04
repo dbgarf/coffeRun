@@ -14,5 +14,6 @@ Login to the django app container `docker compose exec app /bin/bash` and then r
 
 ```
 cd coffee_run
+python manage.py createsuperuser
 python manage.py migrate
 ```

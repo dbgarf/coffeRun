@@ -1,5 +1,6 @@
 from django.db import models
 from decimal import Decimal
+from django.urls import reverse
 
 class User(models.Model):
     name = models.CharField(unique=True, max_length=255)
@@ -9,6 +10,9 @@ class User(models.Model):
     
     def __str__(self) -> str:
         return f"CoffeeRun User {self.name}"
+
+    def get_absolute_url(self):
+        return reverse("user_update", kwargs={"pk": self.pk})
 
 class OrderItem(models.Model):
     name = models.CharField(max_length=255)

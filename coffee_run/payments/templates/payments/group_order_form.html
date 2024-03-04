@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoffeeRun - Create Group Order</title>
+<style>
+    /* Add your CSS styling here */
+</style>
+</head>
+<body>
+    <h1>Create Group Order</h1>
+
+    <form id="createGroupOrderForm">
+        <table id="orderItemsTable">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Item Name</th>
+                    <th>Item Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="orderItemsList"></tbody>
+        </table><br>
+        <button type="button" onclick="addNewOrderItem()">Add Item</button><br><br>
+        <button type="button" onclick="submitForm()">Create Group Order</button>
+    </form>
+
+    <script>
+        let orderItems = [];
+
+        function addNewOrderItem() {
+            const orderItem = {user: '', name: '', price: ''};
+            orderItems.push(orderItem);
+            renderOrderItems();
+        }
+
+        function removeOrderItem(index) {
+            orderItems.splice(index, 1);
+            renderOrderItems();
+        }
+
+        function renderOrderItems() {
+            const orderItemsList = document.getElementById('orderItemsList');
+            orderItemsList.innerHTML = '';
+
+            orderItems.forEach((item, index) => {
+                const row = document.createElement('tr');
+                const userCell = document.createElement('td');
+                const nameCell = document.createElement('td');
+                const priceCell = document.createElement('td');
+                const actionCell = document.createElement('td');
+                const removeButton = document.createElement('button');
+
+                const selectUser = document.createElement('select');
+                selectUser.name = 'user';
+                selectUser.innerHTML = `
+                    <option value="">--Please choose an option--</option>
+                    <option value="1" >Alice</option>
+                    <option value="2">Bob</option>
+                    <option value="3">Charlie</option>
+                `;
+                selectUser.value = item.user;
+                selectUser.required = true;
+                selectUser.addEventListener('change', (event) => {
+                    orderItems[index].user = event.target.value;
+                });
+                userCell.appendChild(selectUser);
+
+                const inputName = document.createElement('input');
+                inputName.name = 'name';
+                inputName.type='text';
+                inputName.required = true;
+                inputName.value = item.name;
+                inputName.addEventListener('change', (event) => {
+                    orderItems[index].name = event.target.value;
+                });
+                nameCell.appendChild(inputName);
+
+                const inputPrice = document.createElement('input');
+                inputPrice.name = 'price';
+                inputPrice.type = 'number';
+                inputPrice.min = 0.1;
+                inputPrice.max = 100;
+                inputPrice.step = 0.01
+                inputPrice.value = item.price;
+                inputPrice.addEventListener('change', (event) => {
+                    orderItems[index].price = event.target.value;
+                });
+                priceCell.appendChild(inputPrice);
+
+                removeButton.textContent = 'Remove';
+                removeButton.addEventListener('click', () => removeOrderItem(index));
+                actionCell.appendChild(removeButton);
+
+                row.appendChild(userCell);
+                row.appendChild(nameCell);
+                row.appendChild(priceCell);
+                row.appendChild(actionCell);
+
+                orderItemsList.appendChild(row);
+            });
+        }
+
+        function submitForm() {
+            const form = document.getElementById('createGroupOrderForm');
+            const formData = new FormData(form);
+            const formUsers = formData.getAll('user');
+            const formNames = formData.getAll('name');
+            const formPrices = formData.getAll('price');
+            const jsonData = [];
+            for (let i = 0; i < formUsers.length; i++) {
+                orderItem = {
+                    'user': formUsers[i],
+                    'name': formNames[i],
+                    'price': formPrices[i]
+                };
+                jsonData.push(orderItem);
+            }
+
+            // fetch('/grouporder/create', {
+            //     method: 'PUT',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: jsonData.stringify()
+            // })
+            // .then(response => {
+            //     if (response.ok) {
+            //         console.log('Group order created successfully.');
+            //         // Reset form fields and orderItems array for next group order
+            //         document.getElementById('groupName').value = '';
+            //         document.getElementById('orderItemName').value = '';
+            //         document.getElementById('orderItemPrice').value = '';
+            //         orderItems = [];
+            //         renderOrderItems();
+            //     } else {
+            //         console.error('Error creating group order.');
+            //     }
+            // })
+            // .catch(error => {
+            //     console.error('Error:', error);
+            // });
+        }
+    </script>
+</body>
+</html>

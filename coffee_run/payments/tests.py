@@ -109,6 +109,9 @@ class TestFairness(TestCase):
         sam = User.objects.create(name='Sam') # randomly orders a drink
 
         # simulate 1 year worth of coffee runs
+        # NOTE: 365 is chosen because it's a human time scale and makes sense
+        # and because it's small enough that the test runs in reasonable time
+        # have manually tested this with larger iterations and it still holds up
         day_of_order = date.today()
         for _ in range(365):
             day_of_order = day_of_order + timedelta(days=1)
