@@ -6,7 +6,7 @@ class User(models.Model):
     name = models.CharField(unique=True, max_length=255)
     last_payment_date = models.DateField(default=None, null=True)
     # positive number means they've spent more than they've paid, negative number the opposite
-    net_credit = models.DecimalField(decimal_places=2, max_digits=4, default=0)
+    net_credit = models.DecimalField(decimal_places=2, max_digits=6, default=0)
     
     def __str__(self) -> str:
         return f"CoffeeRun User {self.name}"
@@ -16,7 +16,7 @@ class User(models.Model):
 
 class OrderItem(models.Model):
     name = models.CharField(max_length=255)
-    price = models.DecimalField(decimal_places=2, max_digits=4)
+    price = models.DecimalField(decimal_places=2, max_digits=6)
     ordered_by = models.ForeignKey("User", on_delete=models.CASCADE)
     group_order = models.ForeignKey('GroupOrder', on_delete=models.CASCADE)
 

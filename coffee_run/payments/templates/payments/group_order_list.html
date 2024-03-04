@@ -10,14 +10,16 @@
 </head>
 <body>
 
-<ul>
-    {% for group_order in group_orders %}
-    <li>
-        <a href="{% url 'group_order_detail' group_order.pk %}">Date: {{group_order.order_date}} | Total Price: ${{group_order.total_price}} | Payer: {{group_order.payer.name}}</a>
-    </li>
-    {% endfor %}
-</ul>
-    
+<div>
+    <h3>Group Orders List</h3>
+    <ul>
+        {% for group_order in group_orders %}
+        <li>
+            <a href="{% url 'group_order_detail' group_order.pk %}">Date: {{group_order.order_date}} | Total Price: ${{group_order.total_price}} | Payer: {{group_order.payer.name}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 
 <div>
     <a href="{% url 'index' %}">Back to Index</a>

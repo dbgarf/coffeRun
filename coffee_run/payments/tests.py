@@ -68,6 +68,26 @@ class TestGroupOrder(TestCase):
         self.assertEqual(user2.last_payment_date, date(2024, 3, 2))
         self.assertEqual(group_order_1.status, GROUP_ORDER_STATUS['complete'])
 
+    def test_group_order_complete_order_does_not_select_uninvolved_users_as_payer(self):
+        """
+        Scenario: Dan has the highest net credit but is not participating in the order so he shouldn't pay
+        """
+        user1 = User.objects.create(name='Dan', net_credit=100, last_payment_date=date(2024, 3, 1))
+        user2 = User.objects.create(name='Jim', net_credit=10, last_payment_date=date(2024, 3, 2)) # Jim should pay
+        user3 = User.objects.create(name='Alice', net_credit=5, last_payment_date=date(2024, 3, 3))
+        group_order_1 = GroupOrder.objects.create()
+        OrderItem.objects.create(name='black coffee', price=1, ordered_by=user2, group_order=group_order_1)
+        OrderItem.objects.create(name='Cappucino', price=5, ordered_by=user3, group_order=group_order_1)
+
+        self.assertEqual(group_order_1.status, GROUP_ORDER_STATUS['pending'])
+        group_order_1.complete_order()
+
+        # refresh the users for new values after the order is completed
+        user1.refresh_from_db()
+        user2.refresh_from_db()
+        user3.refresh_from_db()
+        self.assertEqual(group_order_1.payer, user2)
+
 class TestFairness(TestCase):
 
     def make_order_item(self, 
