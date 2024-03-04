@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoffeeRun - Create Group Order</title>
+<style>
+    /* Add your CSS styling here */
+</style>
+</head>
+<body>
+
+<div>
+    <h3>Group Order Summary</h3>
+    <p>Order Date: {{group_order.order_date}}</p>
+    <p>Total Price: ${{group_order.total_price}}</p>
+    <p><b>Payer: {{group_order.payer.name}}</b></p>
+</div>
+
+<div>
+    <h3>Group Order Details</h3>
+    <ol>
+        {% for item in order_items %}
+        <li>Item Name: {{item.name}} | Price: ${{item.price}} | Ordered By: {{item.ordered_by.name}}</li>
+        {% endfor %}
+    </ol>
+<div>
+    <a href="{% url 'index' %}">Back to Index</a>
+    <a href="{% url 'group_order_create' %}">Create New Group Order</a>
+</div>
+
+</body>
+</html>

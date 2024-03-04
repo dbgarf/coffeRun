@@ -11,6 +11,11 @@
 <body>
     <h1>Create Group Order</h1>
 
+    {% csrf_token %}
+    <script>
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    </script>
+
     <form id="createGroupOrderForm">
         <table id="orderItemsTable">
             <thead>
@@ -27,8 +32,17 @@
         <button type="button" onclick="submitForm()">Create Group Order</button>
     </form>
 
+    <div>
+        <a href="{% url 'index' %}">Back to Index</a>
+        <a href="{% url 'group_order_list' %}">Group Orders List</a>
+    </div>
+
+    {{ users|json_script:"users-data" }}
+
+    {% verbatim  %}
     <script>
         let orderItems = [];
+        const users = JSON.parse(document.getElementById('users-data').textContent);
 
         function addNewOrderItem() {
             const orderItem = {user: '', name: '', price: ''};
@@ -55,12 +69,17 @@
 
                 const selectUser = document.createElement('select');
                 selectUser.name = 'user';
-                selectUser.innerHTML = `
-                    <option value="">--Please choose an option--</option>
-                    <option value="1" >Alice</option>
-                    <option value="2">Bob</option>
-                    <option value="3">Charlie</option>
-                `;
+                const blank_option = document.createElement('option');
+                blank_option.value = '';
+                blank_option.textContent = '--Please Choose an Option--';
+                selectUser.appendChild(blank_option);
+                users.forEach((user) => {
+                    let option = document.createElement('option');
+                    option.value = user.id;
+                    option.textContent = user.name;
+                    selectUser.appendChild(option);
+                });
+
                 selectUser.value = item.user;
                 selectUser.required = true;
                 selectUser.addEventListener('change', (event) => {
@@ -109,40 +128,39 @@
             const formUsers = formData.getAll('user');
             const formNames = formData.getAll('name');
             const formPrices = formData.getAll('price');
-            const jsonData = [];
+            const payload = [];
             for (let i = 0; i < formUsers.length; i++) {
                 orderItem = {
                     'user': formUsers[i],
                     'name': formNames[i],
                     'price': formPrices[i]
                 };
-                jsonData.push(orderItem);
+                payload.push(orderItem);
             }
-
-            // fetch('/grouporder/create', {
-            //     method: 'PUT',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: jsonData.stringify()
-            // })
-            // .then(response => {
-            //     if (response.ok) {
-            //         console.log('Group order created successfully.');
-            //         // Reset form fields and orderItems array for next group order
-            //         document.getElementById('groupName').value = '';
-            //         document.getElementById('orderItemName').value = '';
-            //         document.getElementById('orderItemPrice').value = '';
-            //         orderItems = [];
-            //         renderOrderItems();
-            //     } else {
-            //         console.error('Error creating group order.');
-            //     }
-            // })
-            // .catch(error => {
-            //     console.error('Error:', error);
-            // });
+            console.log(payload);
+            fetch('/group_orders/create/', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    console.error('Error creating group order.');
+                }
+            })
+            .then(url => {
+                window.location.href = url;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
     </script>
+    {% endverbatim  %}
 </body>
 </html>
